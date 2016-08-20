@@ -1,0 +1,35 @@
+{
+  "manifest_version": 2,
+
+  "name": "Mystera+",
+  "description": "Adds functionality to Mystera Legacy",
+  "version": "0",
+  "background":{
+    "scripts":["background.js"]
+  },
+  "externally_connectable":{
+    "matches":[
+      "*://www.mysteralegacy.com/*"
+    ]
+  },
+  "web_accessible_resources":[
+    "runner.js",
+    "socketHack.js",
+    "breaksound.wav",
+    "healthsound.wav"
+  ],
+  "browser_action": {
+    "default_icon": "icon.png"
+  },
+    "permissions": [
+    "*://www.mysteralegacy.com/*",
+    "storage"
+  ],
+  "content_scripts":[
+    {
+      "matches":["*://www.mysteralegacy.com/play/full.php","*://www.mysteralegacy.com/play-mystera-legacy/"],
+      "js":["contentscript.js"],
+      "run_at":"document_start"
+    }
+  ]
+}
