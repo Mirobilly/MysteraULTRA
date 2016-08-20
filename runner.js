@@ -9,6 +9,7 @@ var attack = false;
 var gameSocket;
 var player;
 var autorun = false;
+var foodSlot;
 
 function send(a){
 	if(sockets.length==0)
@@ -64,9 +65,14 @@ document.addEventListener('intervalWorkerText', function(e){
 		if(!inv) 
 			return;
 		var newBrokenItems = 0;
+		foodSlot = -1;
 		for(var c = 0;c<inv.length;c++)
+		{
 			if(inv[c].equip==2 && /\S/.test(inv[c].title.text))
 				newBrokenItems++;
+			if(inv[c].title.text == "Cooked Carrot" || inv[c].title.text == "Cooked Meat")
+				foodSlot = c;
+		}
 		if(newBrokenItems>0)
 			itemBreak();
 
@@ -77,6 +83,8 @@ document.addEventListener('intervalWorkerText', function(e){
 			var elem = document.querySelector('#healthsound');
 			elem.play();
 		}
+		if(hunger_status && hunger_status.val<25 && foodSlot!=-1)
+			send({type:"u",slot:foodSlot});
 	};
 	scanWorker.postMessage(500);
 
