@@ -2,6 +2,7 @@ var workerBlob;
 var runWorker;
 var scanWorker;
 var connectionWorker;
+var stairWorker;
 var brokenItems = 0;
 var hasFocusHolder;
 var direction = true;
@@ -10,6 +11,7 @@ var gameSocket;
 var player;
 var autorun = false;
 var foodSlot;
+var stairways = [];
 var lastKey;
 var KEYCODES = {
 	KeyW:'keyW',
@@ -104,6 +106,23 @@ document.addEventListener('intervalWorkerText', function(e){
 		send({});
 	};
 	connectionWorker.postMessage(2000);
+
+	stairWorker = new Worker(URL.createObjectURL(workerBlob));
+	stairWorker.onmessage = function(){
+		var down = objects.fetch("Stairway","name");
+		if(down)
+		{
+			var level = Number(dlevel);
+			if(level==0) level = 1;
+			if(!stairways[level])
+			{
+				append("Stairway down at "+down.x+","+down.y+" on "+level);
+				stairways[level] = {x:down.x,y:down.y};
+			}
+		}
+		//var up = objects.fetch("Stairs Up");
+	};
+	stairWorker.postMessage(2000);
 });
 
 //listener for autorun
