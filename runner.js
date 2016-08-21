@@ -10,6 +10,17 @@ var gameSocket;
 var player;
 var autorun = false;
 var foodSlot;
+var lastKey;
+var KEYCODES = {
+	KeyW:'keyW',
+	KeyA:'keyA',
+	KeyS:'keyS',
+	KeyD:'keyD',
+	ArrowLeft:'keyLeft',
+	ArrowUp:'keyUp',
+	ArrowRight:'keyRight',
+	ArrowDown:'keyDown'
+};
 
 function send(a){
 	if(sockets.length==0)
@@ -97,9 +108,43 @@ document.addEventListener('intervalWorkerText', function(e){
 
 //listener for autorun
 document.addEventListener('autorunToggle', function(){
-	//autorun = !autorun;
+	autorun = !autorun;
 	append("Auto-run "+((autorun)?"enabled":"disabled"));
+	if(autorun)
+		window.addEventListener('keyup',keyUpIntercept);
+	else 
+	{
+		window.removeEventListener('keyup',keyUpIntercept);
+		for(var key in KEYCODES)
+		{
+			window[KEYCODES[key]].isDown = 0;
+			window[KEYCODES[key]].isUp = 1;
+		}
+	}
 });
+
+function keyUpIntercept(e){
+	if(KEYCODES[e.code])
+	{
+		var jvhKey = window[KEYCODES[e.code]];
+		if(!jvhKey.isDown && document.querySelector('#input_field')!==document.activeElement)
+		{
+			jvhKey.isDown = 1;
+			jvhKey.isUp = 0;
+			if(lastKey && lastKey != jvhKey){
+				lastKey.isDown = 0;
+				lastKey.isUp = 1;
+			}
+			lastKey = jvhKey;
+		}
+		/*e.stopPropagation();
+		if(lastKey && lastKey != window[KEYCODES[e.code]]){
+			lastKey.isDown = 0;
+			lastKey.isUp = 1;
+		}
+		lastKey = window[KEYCODES[e.code]];*/
+	}
+}
 
 //listener for the explore behavior toggle
 document.addEventListener('macroToggle', function(e){

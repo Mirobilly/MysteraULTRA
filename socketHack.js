@@ -16,7 +16,7 @@ window.WebSocket = function(ip){
 					return (function(data){
 						console.log(data);
 						var parsed = JSON.parse(data);
-						if((attack && parsed.type == "a") || (autorun && parsed.type == "h" && !parsed.d))
+						if((attack && parsed.type == "a")/* || (autorun && parsed.type == "h" && !parsed.d)*/)
 							return;
 						target.socket.send(data);
 					}).bind(target.socket);
