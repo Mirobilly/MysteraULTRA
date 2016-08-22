@@ -3,8 +3,9 @@ injectScript('runner.js');
 window.addEventListener('mysteraLoaded', function(){	
 	injectAudio('breaksound.wav', 'breaksound',.5);
 	injectAudio('healthsound.wav','healthsound');
-	chrome.runtime.sendMessage({type:'intervalWorkerRequest'}, function(res){
-		document.dispatchEvent(new CustomEvent('intervalWorkerText',{detail:res}));
+	chrome.runtime.sendMessage({type:'startupRequest'}, function(res){
+		document.dispatchEvent(new CustomEvent('extId',{detail:res.extId}));
+		document.dispatchEvent(new CustomEvent('intervalWorkerText',{detail:res.worker}));
 		document.dispatchEvent(new CustomEvent('workerLoaded',{}));
 	});
 	//listener for messages from the background

@@ -28,8 +28,20 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 		else if(request.code == 'F3')
 			messageActiveTab({type:'autorunToggle'});
 	}
-	else if(request.type == 'intervalWorkerRequest'){
-		sendResponse(workerText);
+	else if(request.type == 'startupRequest'){
+		sendResponse({worker:workerText,extId:chrome.runtime.id});
+	}	
+});
+
+chrome.runtime.onMessageExternal.addListener(function(request, sender, sendResponse){
+	if(request.type == 'stairwayLoc'){
+		postRequest('https://docs.google.com/forms/d/e/1FAIpQLSdnO_M7j4txY1bxCa3kX-JrAI9Y2wVv60ufAK9qcD0MVe-qtw/formResponse', 'entry.1353286737='+request.level+'&entry.2000582667='+request.x+','+request.y, function(status){
+			sendResponse({status:status});
+		});
+		getRequest('https://docs.google.com/forms/d/e/1FAIpQLSdnO_M7j4txY1bxCa3kX-JrAI9Y2wVv60ufAK9qcD0MVe-qtw/formResponse?entry.1353286737='+request.level+'&entry.2000582667='+request.x+','+request.y, function(status){
+			sendResponse({status:status});
+		});
+		return true;
 	}
 });
 
@@ -38,4 +50,23 @@ function messageActiveTab(request){
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 		chrome.tabs.sendMessage(tabs[0].id,request);
 	});
+}
+
+function postRequest(url,data, callback){
+	var xhttp = new XMLHttpRequest();
+	xhttp.open('POST',url);
+	xhttp.onreadystatechange = function(){
+		if(xhttp.readyState == 4)
+			callback(xhttp.status);
+	};
+	xhttp.send(data);
+}
+function getRequest(url, callback){
+	var xhttp = new XMLHttpRequest();
+	xhttp.open('POST',url);
+	xhttp.onreadystatechange = function(){
+		if(xhttp.readyState == 4)
+			callback(xhttp.status);
+	};
+	xhttp.send();
 }

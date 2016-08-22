@@ -12,6 +12,7 @@ var player;
 var autorun = false;
 var foodSlot;
 var stairways = [];
+var altar;
 var lastKey;
 var KEYCODES = {
 	KeyW:'keyW',
@@ -23,6 +24,7 @@ var KEYCODES = {
 	ArrowRight:'keyRight',
 	ArrowDown:'keyDown'
 };
+var extId;
 
 function send(a){
 	if(sockets.length==0)
@@ -114,15 +116,30 @@ document.addEventListener('intervalWorkerText', function(e){
 		{
 			var level = Number(dlevel);
 			if(level==0) level = 1;
-			if(!stairways[level])
+			if(!stairways[level] || stairways[level].x !== down.x || stairways[level].y!=down.y)
 			{
 				append("Stairway down at "+down.x+","+down.y+" on "+level);
 				stairways[level] = {x:down.x,y:down.y};
+				if(extId && level>=4)
+					chrome.runtime.sendMessage(extId,{type:'stairwayLoc',x:down.x,y:down.y,level:level}, function(res){
+						append(res.status == 200 ? "Stairway logged" : "Failed to log stairway");
+					});
 			}
 		}
 		//var up = objects.fetch("Stairs Up");
+
+		var newAltar = objects.fetch("Altar","name");
+		if(newAltar && (!altar || newAltar.x!=altar.x || newAltar.y!=altar.y))
+		{
+			append('Altar at '+newAltar.x+','+newAltar.y)
+			altar = newAltar;
+		}
 	};
 	stairWorker.postMessage(2000);
+});
+
+document.addEventListener('extId', function(e){
+	extId = e.detail;
 });
 
 //listener for autorun

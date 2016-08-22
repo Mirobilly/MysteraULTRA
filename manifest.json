@@ -23,7 +23,8 @@
   },
     "permissions": [
     "*://www.mysteralegacy.com/*",
-    "storage"
+    "storage",
+    "https://docs.google.com/forms/d/1FAIpQLSdnO_M7j4txY1bxCa3kX-JrAI9Y2wVv60ufAK9qcD0MVe-qtw/formResponse"
   ],
   "content_scripts":[
     {
