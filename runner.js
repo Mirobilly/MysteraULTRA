@@ -68,7 +68,7 @@ document.addEventListener('intervalWorkerText', function(e){
 		if(/.*:.*/.test(str))
 		{
 			var now = new Date();;
-			str = now.getHours()+':'+now.getMinutes()+' '+str;
+			str = '<span style="color:#777777">'+now.getHours()+':'+now.getMinutes()+'</span> '+str;
 		}
 		oldAppend(str);
 	};
