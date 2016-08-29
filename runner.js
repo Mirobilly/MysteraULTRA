@@ -25,6 +25,7 @@ var KEYCODES = {
 	ArrowDown:'keyDown'
 };
 var extId;
+var mUltraToggle = true;
 
 function send(a){
 	if(sockets.length==0)
@@ -56,14 +57,21 @@ document.addEventListener('compass', function(e){
 		dmsg = " UG";
 	if(dlevel>2)
 		dmsg = " on UWL" + dlevel;
-	append("You're at "+pl.x+", "+pl.y+dmsg);
+	append("You're at "+pl.x+", "+pl.y+dmsg,'mUltra');
+});
+
+document.addEventListener('mUltraToggle',function(e){
+	mUltraToggle = !mUltraToggle;
+	$('.mUltra').each(function(i,obj){
+		obj.style.display = (mUltraToggle) ? "":"none";
+	});
 });
 
 //listener to receive text of the explo worker
 //this creates a blob that is later used to create the worker
 document.addEventListener('intervalWorkerText', function(e){
 	var oldAppend = append;
-	append = function(str){
+	append = function(str, divClass){
 		//oldAppend(str.replace(/>(.*: .*)</,'>'+Date.now()+'$1'+'<'));
 		if(/.*:.*/.test(str))
 		{
@@ -71,8 +79,10 @@ document.addEventListener('intervalWorkerText', function(e){
 			var minutes = now.getMinutes();
 			if(minutes<10)
 				minutes = '0'+minutes;
-			str = '<span style="color:#777777">'+now.getHours()+':'+minutes+'</span> '+str;
+			str = '<span style="color:#777777" class="mUltra">'+now.getHours()+':'+minutes+'</span> '+str;
 		}
+		if(divClass)
+			str = '<div class="'+divClass+'">'+str+'</div>';
 		oldAppend(str);
 	};
 
@@ -132,11 +142,11 @@ document.addEventListener('intervalWorkerText', function(e){
 			if(level==0) level = 1;
 			if(!stairways[level] || stairways[level].x !== down.x || stairways[level].y!=down.y)
 			{
-				append("Stairway down at "+down.x+","+down.y+" on "+level);
+				append("Stairway down at "+down.x+","+down.y+" on "+level,'mUltra');
 				stairways[level] = {x:down.x,y:down.y};
 				if(extId && level>=4)
 					chrome.runtime.sendMessage(extId,{type:'stairwayLoc',x:down.x,y:down.y,level:level}, function(res){
-						append(res.status == 200 ? "Stairway logged" : "Failed to log stairway");
+						append((res.status == 200 ? "Stairway logged" : "Failed to log stairway"),'mUltra');
 					});
 			}
 		}
@@ -145,7 +155,7 @@ document.addEventListener('intervalWorkerText', function(e){
 		var newAltar = objects.fetch("Altar","name");
 		if(newAltar && (!altar || newAltar.x!=altar.x || newAltar.y!=altar.y))
 		{
-			append('Altar at '+newAltar.x+','+newAltar.y)
+			append('Altar at '+newAltar.x+','+newAltar.y,'mUltra')
 			altar = newAltar;
 		}
 	};
@@ -159,7 +169,7 @@ document.addEventListener('extId', function(e){
 //listener for autorun
 document.addEventListener('autorunToggle', function(){
 	autorun = !autorun;
-	append("Auto-run "+((autorun)?"enabled":"disabled"));
+	append("Auto-run "+((autorun)?"enabled":"disabled"),'mUltra');
 	if(autorun)
 		window.addEventListener('keyup',keyUpIntercept);
 	else 
@@ -201,7 +211,7 @@ document.addEventListener('macroToggle', function(e){
 	//if a worker is running
 	if(runWorker)
 	{
-		append("Ending exploration macro");
+		append("Ending exploration macro",'mUltra');
 		//kill it
 		runWorker.terminate();
 		runWorker = undefined;
@@ -211,7 +221,7 @@ document.addEventListener('macroToggle', function(e){
 	//if there's no worker
 	else
 	{
-		append("Starting exploration macro");
+		append("Starting exploration macro",'mUltra');
 		direction = true;
 		//create worker from blob
 		runWorker = new Worker(URL.createObjectURL(workerBlob));
@@ -251,7 +261,7 @@ document.addEventListener('attackToggle', function(){
 	//if we're starting our attack
 	if(attack)
 	{
-		append("Starting auto-attack");
+		append("Starting auto-attack",'mUltra');
 		//replace hasFocus
 		hasFocusHolder = document.hasFocus;
 		document.hasFocus = function(){
@@ -261,7 +271,7 @@ document.addEventListener('attackToggle', function(){
 	//if we're ending it
 	else
 	{
-		append("Ending auto-attack");
+		append("Ending auto-attack",'mUltra');
 		//revert hasFocus
 		document.hasFocus = hasFocusHolder;
 	}
