@@ -18,6 +18,10 @@ window.WebSocket = function(ip){
 						var parsed = JSON.parse(data);
 						if((attack && parsed.type == "a")/* || (autorun && parsed.type == "h" && !parsed.d)*/)
 							return;
+						if(parsed.data == '/help')
+						{
+							append('<em><span style="color:#fff5cc">Controls for</span></em> '+muLogo+'<br><span style="color:#fff5cc"><strong>F1</strong><em> - Auto-attack<br></em><strong>F2</strong><em> - Compass<br></em><Strong>F3</strong><em> - Auto-run<br></em><strong>F4</strong><em> - Toggle clean-chat</span></em> ','mUltra');
+						}
 						target.socket.send(data);
 					}).bind(target.socket);
 				//if we haven't manually closed, but the socket is closing

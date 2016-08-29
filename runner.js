@@ -1,3 +1,4 @@
+var muLogo = '<span style="color:#00ffff">mystera</span><strong><span style="color:#cc33ff">ULTRA</span></strong>';
 var workerBlob;
 var runWorker;
 var scanWorker;
@@ -79,10 +80,12 @@ document.addEventListener('mUltraToggle',function(e){
 //listener to receive text of the explo worker
 //this creates a blob that is later used to create the worker
 document.addEventListener('intervalWorkerText', function(e){
+	append('<div class="mUltra"><em><span style="color:#fff5cc">Powered by</span> </em>'+muLogo+'</div>');
+
 	var oldAppend = append;
 	append = function(str, divClass){
 		//oldAppend(str.replace(/>(.*: .*)</,'>'+Date.now()+'$1'+'<'));
-		if(/.*:.*/.test(str))
+		if(/.*:.*/.test(str) && (!(/.*<.*:.*>.*/.test(str)) || /[^<]*:[^>]*<.*/.test(str)))
 		{
 			var now = new Date();
 			var minutes = now.getMinutes();
