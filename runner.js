@@ -128,12 +128,12 @@ document.addEventListener('intervalWorkerText', function(e){
 
 		brokenItems = newBrokenItems;
 
-		if(hp_status && hp_status.val<50)
+		if(hp_status && hp_status.val<25)
 		{
 			var elem = document.querySelector('#healthsound');
 			elem.play();
 		}
-		if(hunger_status && hunger_status.val<25 && foodSlot!=-1)
+		if(hunger_status && hunger_status.val<50 && foodSlot!=-1)
 			send({type:"u",slot:foodSlot});
 	};
 	scanWorker.postMessage(500);
