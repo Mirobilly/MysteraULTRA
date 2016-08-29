@@ -118,7 +118,9 @@ document.addEventListener('intervalWorkerText', function(e){
 		{
 			if(inv[c].equip==2 && /\S/.test(inv[c].title.text))
 				newBrokenItems++;
-			if(inv[c].title.text == "Cooked Carrot" || inv[c].title.text == "Cooked Meat")
+			if(inv[c].title.text == "Old Cooked Carrot" || inv[c].title.text == "Old Carrot" || inv[c].title.text == "Old Cooked Meat")
+				foodSlot = c;
+			else if(foodSlot == -1 && inv[c].title.text == "Cooked Carrot" || inv[c].title.text == "Cooked Meat")
 				foodSlot = c;
 		}
 		if(newBrokenItems>0)
@@ -126,7 +128,7 @@ document.addEventListener('intervalWorkerText', function(e){
 
 		brokenItems = newBrokenItems;
 
-		if(hp_status && hp_status.val<25)
+		if(hp_status && hp_status.val<50)
 		{
 			var elem = document.querySelector('#healthsound');
 			elem.play();
