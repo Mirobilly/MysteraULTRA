@@ -67,8 +67,11 @@ document.addEventListener('intervalWorkerText', function(e){
 		//oldAppend(str.replace(/>(.*: .*)</,'>'+Date.now()+'$1'+'<'));
 		if(/.*:.*/.test(str))
 		{
-			var now = new Date();;
-			str = '<span style="color:#777777">'+now.getHours()+':'+now.getMinutes()+'</span> '+str;
+			var now = new Date();
+			var minutes = now.getMinutes();
+			if(minutes<10)
+				minutes = '0'+minutes;
+			str = '<span style="color:#777777">'+now.getHours()+':'+minutes+'</span> '+str;
 		}
 		oldAppend(str);
 	};
