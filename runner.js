@@ -62,6 +62,17 @@ document.addEventListener('compass', function(e){
 //listener to receive text of the explo worker
 //this creates a blob that is later used to create the worker
 document.addEventListener('intervalWorkerText', function(e){
+	var oldAppend = append;
+	append = function(str){
+		//oldAppend(str.replace(/>(.*: .*)</,'>'+Date.now()+'$1'+'<'));
+		if(/.*:.*/.test(str))
+		{
+			var now = new Date();;
+			str = now.getHours()+':'+now.getMinutes()+' '+str;
+		}
+		oldAppend(str);
+	};
+
 	if(!workerBlob) //do nothing i we've already got the blob
 	{
 		//otherwise create it
@@ -201,6 +212,8 @@ document.addEventListener('macroToggle', function(e){
 		direction = true;
 		//create worker from blob
 		runWorker = new Worker(URL.createObjectURL(workerBlob));
+		var moveLimitInterval = 90;
+		var lastMove = Date.now()-moveLimitInterval;
 		//when we receive a message from the worker
 		runWorker.onmessage = function(){
 			var thePlayer = getPlayer();
@@ -208,7 +221,12 @@ document.addEventListener('macroToggle', function(e){
 			{
 				if(occupied(thePlayer.x,thePlayer.y+1*(direction ? 1:-1),me))
 					direction = !direction;
-				thePlayer.move(thePlayer.x,thePlayer.y+1*(direction ? 1:-1));
+				var now = Date.now();
+				if(now - lastMove >= moveLimitInterval)
+				{
+					thePlayer.move(thePlayer.x,thePlayer.y+1*(direction ? 1:-1));
+					lastMove = now;
+				}
 			}
 		}
 		//start the worker

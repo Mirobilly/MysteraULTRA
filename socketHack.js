@@ -14,7 +14,7 @@ window.WebSocket = function(ip){
 				//return an actual send only when the socket is connected
 				if(target.socket.readyState==1)
 					return (function(data){
-						console.log(data);
+						//console.log(data);
 						var parsed = JSON.parse(data);
 						if((attack && parsed.type == "a")/* || (autorun && parsed.type == "h" && !parsed.d)*/)
 							return;
@@ -99,6 +99,12 @@ window.WebSocket = function(ip){
 			window.dispatchEvent(new CustomEvent('mysteraLoaded',{}));
 			initialPageLoad = true;
 		}
+		/*else if (parsed.type == 'zip')
+		{
+			var parsedData = JSON.parse(jv.unzip(parsed.data));
+			console.log(parsedData);
+
+		}*/
 	});
 	//text alerts for disconnects
 	proxy.addEventListener('close',function(e){
