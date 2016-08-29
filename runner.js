@@ -13,6 +13,7 @@ var autorun = false;
 var foodSlot;
 var stairways = [];
 var altar;
+var hole;
 var lastKey;
 var KEYCODES = {
 	KeyW:'keyW',
@@ -53,11 +54,19 @@ function itemBreak(){
 document.addEventListener('compass', function(e){
 	var pl = getPlayer();
 	var dmsg = "";
-	if(dlevel==2)
+	var level = Number(dlevel);
+	if(level==0) level = 1;
+
+	if(level==2)
 		dmsg = " UG";
-	if(dlevel>2)
+	if(level>2)
 		dmsg = " on UWL" + dlevel;
+
 	append("You're at "+pl.x+", "+pl.y+dmsg,'mUltra');
+
+	if(stairways[level-1] && level!=4) append('Stairs up at '+stairways[level-1].x+','+stairways[level-1].y,'mUltra');
+	if(level == 3 && hole) append('Hole at '+hole.x+','+hole.y,'mUltra');
+	else if(stairways[level]) append('Stairs down at '+stairways[level].x+','+stairways[level].y,'mUltra');
 });
 
 document.addEventListener('mUltraToggle',function(e){
@@ -136,18 +145,21 @@ document.addEventListener('intervalWorkerText', function(e){
 	stairWorker = new Worker(URL.createObjectURL(workerBlob));
 	stairWorker.onmessage = function(){
 		var down = objects.fetch("Stairway","name");
+		var level = Number(dlevel);
+		if(level==0) level = 1;
 		if(down)
 		{
-			var level = Number(dlevel);
-			if(level==0) level = 1;
 			if(!stairways[level] || stairways[level].x !== down.x || stairways[level].y!=down.y)
 			{
-				append("Stairway down at "+down.x+","+down.y+" on "+level,'mUltra');
 				stairways[level] = {x:down.x,y:down.y};
-				if(extId && level>=4)
-					chrome.runtime.sendMessage(extId,{type:'stairwayLoc',x:down.x,y:down.y,level:level}, function(res){
-						append((res.status == 200 ? "Stairway logged" : "Failed to log stairway"),'mUltra');
-					});
+				if(level>=4)
+				{
+					append("Stairway down at "+down.x+","+down.y+" on "+level,'mUltra');
+					if(extId)
+						chrome.runtime.sendMessage(extId,{type:'stairwayLoc',x:down.x,y:down.y,level:level}, function(res){
+							append((res.status == 200 ? "Stairway logged" : "Failed to log stairway"),'mUltra');
+						});
+				}
 			}
 		}
 		//var up = objects.fetch("Stairs Up");
@@ -155,8 +167,17 @@ document.addEventListener('intervalWorkerText', function(e){
 		var newAltar = objects.fetch("Altar","name");
 		if(newAltar && (!altar || newAltar.x!=altar.x || newAltar.y!=altar.y))
 		{
-			append('Altar at '+newAltar.x+','+newAltar.y,'mUltra')
+			append('Altar at '+newAltar.x+','+newAltar.y+' on '+level,'mUltra')
 			altar = newAltar;
+		}
+
+		if(level == 3){
+			var newHole = objects.fetch("Hole","name");
+			if(newHole && (!hole || newHole.x!=hole.x || newHole.y!=hole.y))
+			{
+				append('Hole at '+newHole.x+','+newHole.y,'mUltra')
+				hole = newHole;
+			}
 		}
 	};
 	stairWorker.postMessage(2000);
