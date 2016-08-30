@@ -110,7 +110,7 @@ document.addEventListener('intervalWorkerText', function(e){
 	}, true);
 
 	window.addEventListener('paste',function(e){
-		if(mUltraToggle)
+		if(pasteIntercept)
 		{
 			e.stopPropagation();
 			e.preventDefault();
