@@ -28,6 +28,7 @@ var KEYCODES = {
 };
 var extId;
 var mUltraToggle = true;
+var pasteIntercept = false;
 
 function send(a){
 	if(sockets.length==0)
@@ -97,6 +98,25 @@ document.addEventListener('intervalWorkerText', function(e){
 			str = '<div class="'+divClass+'">'+str+'</div>';
 		oldAppend(str);
 	};
+
+	window.addEventListener('copy',function(e){
+		pasteIntercept = false;
+		if(mUltraToggle)
+		{
+			e.stopPropagation();
+			pasteIntercept = true;
+			append('Disable extension text.','mUltra');
+		}
+	}, true);
+
+	window.addEventListener('paste',function(e){
+		if(mUltraToggle)
+		{
+			e.stopPropagation();
+			e.preventDefault();
+			append('<h3>Disable extension text.</h3>','mUltra');
+		}
+	},true);
 
 	if(!workerBlob) //do nothing i we've already got the blob
 	{
