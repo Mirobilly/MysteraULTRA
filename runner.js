@@ -29,6 +29,8 @@ var KEYCODES = {
 var extId;
 var mUltraToggle = true;
 var pasteIntercept = false;
+var trackWorker;
+var staticTrackList = {};
 
 function send(a){
 	if(sockets.length==0)
@@ -206,6 +208,21 @@ document.addEventListener('intervalWorkerText', function(e){
 		}
 	};
 	stairWorker.postMessage(2000);
+
+	trackWorker = new Worker(URL.createObjectURL(workerBlob));
+
+	trackWorker.onmessage = function(){
+		for(var key in staticTrackList)
+		{
+			var item = objects.fetch(key, "name");
+			if(item && (item.x != staticTrackList[key].x || item.y != staticTrackList[key].y))
+			{
+				append(key+' at '+item.x+','+item.y,'mUltra');
+				staticTrackList[key] = {x:item.x,y:item.y};
+			}
+		}
+	};
+	trackWorker.postMessage(5000);
 });
 
 document.addEventListener('extId', function(e){

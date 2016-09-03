@@ -16,11 +16,20 @@ window.WebSocket = function(ip){
 					return (function(data){
 						//console.log(data);
 						var parsed = JSON.parse(data);
+						var match;
 						if((attack && parsed.type == "a")/* || (autorun && parsed.type == "h" && !parsed.d)*/)
 							return;
 						if(parsed.data == '/help')
 						{
 							append('<em><span style="color:#fff5cc">Controls for</span></em> '+muLogo+'<br><span style="color:#fff5cc"><strong>F1</strong><em> - Auto-attack<br></em><strong>F2</strong><em> - Compass<br></em><Strong>F3</strong><em> - Auto-run<br></em><strong>F4</strong><em> - Toggle clean-chat</span></em> ','mUltra');
+						}
+						else if((match = /\/track ([^\s]*) (.*)/i.exec(parsed.data)) != null){
+							if(match[1]=='static')
+							{
+								if(!staticTrackList[match[2]]) staticTrackList[match[2]] = {};
+								else delete staticTrackList[match[2]];
+							}
+							return;
 						}
 						target.socket.send(data);
 					}).bind(target.socket);
