@@ -106,11 +106,23 @@ window.WebSocket = function(ip){
 	//snoop on received messages
 	proxy.addEventListener('message', function(msg){
 		var parsed = JSON.parse(msg.data);
+		console.log(parsed.type);
 		//when log in credentials are accepted, fire event. only fires once
 		if(parsed.type == "accepted" && !initialPageLoad)
 		{
 			window.dispatchEvent(new CustomEvent('mysteraLoaded',{}));
 			initialPageLoad = true;
+		}
+		else if(parsed.type == 'chat')
+		{
+			var test = 0;
+			if(fishing && /A bite!/.test(parsed.data))
+			{
+				send({type:"A"});
+				send({type:"a"});
+				send({type:"A"});
+				send({type:"a"});
+			}
 		}
 		/*else if (parsed.type == 'zip')
 		{

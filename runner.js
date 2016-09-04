@@ -34,6 +34,7 @@ var pasteIntercept = false;
 var trackWorker;
 var staticTrackList = {};
 var jvDisplay;
+var fishing = false;
 
 function send(a){
 	if(sockets.length==0)
@@ -240,6 +241,17 @@ document.addEventListener('intervalWorkerText', function(e){
 
 document.addEventListener('extId', function(e){
 	extId = e.detail;
+});
+
+document.addEventListener('fishingToggle', function(){
+	fishing = !fishing;
+	if(fishing){
+		append('Auto-fish enabled','mUltra');
+		send({type:"A"});
+		send({type:"a"});
+	}	
+	else
+		append('Auto-fish disabled','mUltra');
 });
 
 //listener for autorun

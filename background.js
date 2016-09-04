@@ -29,6 +29,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 			messageActiveTab({type:'autorunToggle'});
 		else if(request.code == 'F4')
 			messageActiveTab({type:'mUltraToggle'});
+		else if(request.code=='F5')
+			messageActiveTab({type:'fishingToggle'});
 	}
 	else if(request.type == 'startupRequest'){
 		sendResponse({worker:workerText,extId:chrome.runtime.id});
