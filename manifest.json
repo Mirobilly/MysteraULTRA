@@ -28,7 +28,7 @@
   ],
   "content_scripts":[
     {
-      "matches":["*://www.mysteralegacy.com/play/full.php","*://www.mysteralegacy.com/play-mystera-legacy/"],
+      "matches":["*://www.mysteralegacy.com/play/full.php","*://www.mysteralegacy.com/play-ml/"],
       "js":["contentscript.js"],
       "run_at":"document_start"
     }
