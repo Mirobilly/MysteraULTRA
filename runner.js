@@ -4,6 +4,8 @@ var runWorker;
 var scanWorker;
 var connectionWorker;
 var stairWorker;
+var rafWorker;
+var raf = requestAnimationFrame;
 var brokenItems = 0;
 var hasFocusHolder;
 var direction = true;
@@ -31,6 +33,7 @@ var mUltraToggle = true;
 var pasteIntercept = false;
 var trackWorker;
 var staticTrackList = {};
+var jvDisplay;
 
 function send(a){
 	if(sockets.length==0)
@@ -223,6 +226,16 @@ document.addEventListener('intervalWorkerText', function(e){
 		}
 	};
 	trackWorker.postMessage(5000);
+
+	rafWorker = new Worker(URL.createObjectURL(workerBlob));
+
+	rafWorker.onmessage = function(){
+		if(autorun || runWorker || attack)
+			jv.frame();
+	};
+
+	//var canv = $('#jv');
+	//jvDisplay = canv.style.display;
 });
 
 document.addEventListener('extId', function(e){
@@ -339,3 +352,22 @@ document.addEventListener('attackToggle', function(){
 		document.hasFocus = hasFocusHolder;
 	}
 });
+
+window.onblur = function(){
+	if(rafWorker)
+	{
+		rafWorker.postMessage(12.5);
+		requestAnimationFrame = function(){};
+	}
+
+	var canv = $('#jv');
+	canv.hide();
+};
+
+window.onfocus = function(){
+	requestAnimationFrame = raf;
+	requestAnimationFrame(jv.frame);
+	if(rafWorker)
+		rafWorker.postMessage(0);
+	$('#jv').show();
+};

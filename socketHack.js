@@ -14,7 +14,7 @@ window.WebSocket = function(ip){
 				//return an actual send only when the socket is connected
 				if(target.socket.readyState==1)
 					return (function(data){
-						//console.log(data);
+						console.log(data);
 						var parsed = JSON.parse(data);
 						var match;
 						if((attack && parsed.type == "a")/* || (autorun && parsed.type == "h" && !parsed.d)*/)
