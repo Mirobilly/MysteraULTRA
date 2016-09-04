@@ -356,7 +356,7 @@ document.addEventListener('attackToggle', function(){
 window.onblur = function(){
 	if(rafWorker)
 	{
-		rafWorker.postMessage(12.5);
+		rafWorker.postMessage(30);
 		requestAnimationFrame = function(){};
 	}
 
