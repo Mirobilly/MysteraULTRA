@@ -186,10 +186,10 @@ document.addEventListener('intervalWorkerText', function(e){
 				if(level>=4)
 				{
 					append("Stairway down at "+down.x+","+down.y+" on "+level,'mUltra');
-					/*if(extId)
+					if(extId)
 						chrome.runtime.sendMessage(extId,{type:'stairwayLoc',x:down.x,y:down.y,level:level}, function(res){
 							append((res.status == 200 ? "Stairway logged" : "Failed to log stairway"),'mUltra');
-						});*/
+						});
 				}
 			}
 		}
