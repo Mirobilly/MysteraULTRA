@@ -38,7 +38,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 });
 
 chrome.runtime.onMessageExternal.addListener(function(request, sender, sendResponse){
-	if(request.type == 'stairwayLoc'){
+	/*if(request.type == 'stairwayLoc'){
 		postRequest('https://docs.google.com/forms/d/e/1FAIpQLSdnO_M7j4txY1bxCa3kX-JrAI9Y2wVv60ufAK9qcD0MVe-qtw/formResponse', 'entry.1353286737='+request.level+'&entry.2000582667='+request.x+','+request.y, function(status){
 			sendResponse({status:status});
 		});
@@ -46,7 +46,7 @@ chrome.runtime.onMessageExternal.addListener(function(request, sender, sendRespo
 			sendResponse({status:status});
 		});
 		return true;
-	}
+	}*/
 });
 
 //this querys for all active tabs in the current window and sends the request object to the first one
