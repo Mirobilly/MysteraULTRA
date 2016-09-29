@@ -88,6 +88,7 @@ document.addEventListener('mUltraToggle',function(e){
 //this creates a blob that is later used to create the worker
 document.addEventListener('intervalWorkerText', function(e){
 	append('<div class="mUltra"><em><span style="color:#fff5cc">Powered by</span> </em>'+muLogo+'</div>');
+	append('<div class="mUltra"><em>Courtesy of Frost Legion R&D</em></div>');
 
 	var oldAppend = append;
 	append = function(str, divClass){
@@ -372,8 +373,8 @@ window.onblur = function(){
 		requestAnimationFrame = function(){};
 	}
 
-	var canv = $('#jv');
-	canv.hide();
+	//var canv = $('#jv');
+	//canv.hide();
 };
 
 window.onfocus = function(){
@@ -381,5 +382,5 @@ window.onfocus = function(){
 	requestAnimationFrame(jv.frame);
 	if(rafWorker)
 		rafWorker.postMessage(0);
-	$('#jv').show();
+	//$('#jv').show();
 };
